@@ -1,81 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registro Rápido</title>
-  <link rel="manifest" href="manifest.json">
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
-  </script>
-  <style>
-    body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Registro Rápido</title>
+<style>
+  body {
+    background: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+  }
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  input, button {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  input {
+    background: #1e1e1e;
+    color: #fff;
+  }
+  button {
+    background-color: #0f9d58;
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+  }
+
+  /* Overlay */
+  #overlay {
+    display: none; /* invisível inicialmente */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.5em;
+    z-index: 9999;
+
+    user-select: none;
+    text-align: center;
+  }
+
+  #overlay span {
+    margin-top: 1rem;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+  .loading-icon {
+    font-size: 4rem;
+    color: #f0c420;
+    animation: spin 1.2s linear infinite;
+  }
+  .success-icon {
+    font-size: 4rem;
+    color: #0f9d58;
+  }
+  .error-icon {
+    font-size: 4rem;
+    color: #f44336;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  /* Responsividade */
+  @media (max-width: 480px) {
     input, button {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
+      font-size: 1.1rem;
+      padding: 14px;
     }
-    input {
-      background: #1e1e1e;
-      color: #fff;
+    #overlay span {
+      font-size: 1.2rem;
     }
-    button {
-      background-color: #0f9d58;
-      color: white;
-      cursor: pointer;
+    .loading-icon, .success-icon, .error-icon {
+      font-size: 3.5rem;
     }
-    button:hover {
-      background-color: #0b7d43;
-    }
-    #resposta {
-      margin-top: 15px;
-      text-align: center;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <h2>Enviar Registro</h2>
-  <input type="text" id="nome" placeholder="Nome">
-  <input type="number" id="total" placeholder="Total">
-  <button onclick="enviar()">Enviar</button>
-  <div id="resposta"></div>
+  <input type="text" id="nome" placeholder="Nome do cliente" autocomplete="off" />
+  <input type="number" id="total" placeholder="Quantidade de bolos" autocomplete="off" />
+  <button id="botao" onclick="enviar()">Enviar</button>
 
-  <script>
-    function enviar() {
-      const nome = document.getElementById("nome").value;
-      const total = document.getElementById("total").value;
-      const resposta = document.getElementById("resposta");
+  <div id="overlay" role="alert" aria-live="assertive" aria-atomic="true" aria-hidden="true">
+    <div id="statusMessage"></div>
+  </div>
 
-      if (!nome || !total) {
-        resposta.innerText = "Preencha todos os campos!";
-        return;
-      }
+<script>
+  const overlay = document.getElementById("overlay");
+  const statusMessage = document.getElementById("statusMessage");
+  const botao = document.getElementById("botao");
+  const nomeInput = document.getElementById("nome");
+  const totalInput = document.getElementById("total");
 
-      fetch("https://script.google.com/macros/s/AKfycbyEQIo5z5cdRSP5tL1riLRTWv4rSM6nVvBF4SxZfhsek-kqANJQOLVbI12D-diY5X3B-A/exec", {
-        method: "POST",
-        body: new URLSearchParams({
-          nome: nome,
-          total: total
-        })
-      })
-      .then(r => r.text())
-      .then(txt => resposta.innerText = txt)
-      .catch(err => resposta.innerText = "Erro ao enviar: " + err);
+  function mostrarOverlay(mensagem, tipo) {
+    let iconHtml = "";
+    if (tipo === "loading") {
+      iconHtml = '<div class="loading-icon" aria-hidden="true">⏳</div>';
+    } else if (tipo === "success") {
+      iconHtml = '<div class="success-icon" aria-hidden="true">✅</div>';
+    } else if (tipo === "error") {
+      iconHtml = '<div class="error-icon" aria-hidden="true">❌</div>';
     }
-  </script>
+    statusMessage.innerHTML = iconHtml + '<span>' + mensagem + "</span>";
+
+    // Mostrar overlay centralizado com flexbox
+    overlay.style.display = "flex";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.flexDirection = "column";
+    overlay.setAttribute("aria-hidden", "false");
+  }
+
+  function esconderOverlay() {
+    overlay.style.display = "none";
+    statusMessage.innerHTML = "";
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  function enviar() {
+    const nome = nomeInput.value.trim();
+    const total = totalInput.value.trim();
+
+    if (!nome || !total) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    mostrarOverlay("Enviando, aguarde...", "loading");
+    botao.disabled = true;
+    nomeInput.disabled = true;
+    totalInput.disabled = true;
+
+    fetch("https://script.google.com/macros/s/AKfycbyEQIo5z5cdRSP5tL1riLRTWv4rSM6nVvBF4SxZfhsek-kqANJQOLVbI12D-diY5X3B-A/exec", {
+      method: "POST",
+      body: new URLSearchParams({
+        nome: nome,
+        total: total,
+      }),
+    })
+    .then(response => response.text())
+    .then(() => {
+      mostrarOverlay("Enviado com sucesso!", "success");
+      setTimeout(() => {
+        esconderOverlay();
+        botao.disabled = false;
+        nomeInput.disabled = false;
+        totalInput.disabled = false;
+        nomeInput.value = "";
+        totalInput.value = "";
+        nomeInput.focus();
+      }, 3000);
+    })
+    .catch((error) => {
+      mostrarOverlay("Erro ao enviar: " + error, "error");
+      setTimeout(() => {
+        esconderOverlay();
+        botao.disabled = false;
+        nomeInput.disabled = false;
+        totalInput.disabled = false;
+      }, 3000);
+    });
+  }
+</script>
 </body>
 </html>
