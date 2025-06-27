@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro Rápido</title>
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+    input {
+      background: #1e1e1e;
+      color: #fff;
+    }
+    button {
+      background-color: #0f9d58;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b7d43;
+    }
+    #resposta {
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>Enviar Registro</h2>
+  <input type="text" id="nome" placeholder="Nome">
+  <input type="number" id="total" placeholder="Total">
+  <button onclick="enviar()">Enviar</button>
+  <div id="resposta"></div>
+
+  <script>
+    function enviar() {
+      const nome = document.getElementById("nome").value;
+      const total = document.getElementById("total").value;
+      const resposta = document.getElementById("resposta");
+
+      if (!nome || !total) {
+        resposta.innerText = "Preencha todos os campos!";
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbyEQIo5z5cdRSP5tL1riLRTWv4rSM6nVvBF4SxZfhsek-kqANJQOLVbI12D-diY5X3B-A/exec", {
+        method: "POST",
+        body: new URLSearchParams({
+          nome: nome,
+          total: total
+        })
+      })
+      .then(r => r.text())
+      .then(txt => resposta.innerText = txt)
+      .catch(err => resposta.innerText = "Erro ao enviar: " + err);
+    }
+  </script>
+</body>
+</html>
