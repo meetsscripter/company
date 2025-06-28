@@ -1,141 +1,99 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Registro Rápido</title>
-<style>
-  body {
-    background: #121212;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    height: 100vh;
-    margin: 0;
-    overflow-x: hidden;
-  }
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  input, button, label {
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-  input {
-    background: #1e1e1e;
-    color: #fff;
-  }
-  button {
-    background-color: #0f9d58;
-    color: white;
-    cursor: pointer;
-  }
-  button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-  }
-  label.checkbox-label {
-    width: auto;
-    padding: 0;
-    margin: 15px 0;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  label.checkbox-label input {
-    width: auto;
-    margin-right: 10px;
-    vertical-align: middle;
-  }
-  #overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
-    font-weight: bold;
-    font-size: 1.5em;
-    z-index: 9999;
-    user-select: none;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  #overlay span {
-    margin-top: 1rem;
-    font-weight: 700;
-    font-size: 1.4rem;
-    line-height: 1.2;
-  }
-  .loading-icon {
-    font-size: 4rem;
-    color: #f0c420;
-    animation: spin 1.2s linear infinite;
-  }
-  .success-icon {
-    font-size: 4rem;
-    color: #0f9d58;
-  }
-  .error-icon {
-    font-size: 4rem;
-    color: #f44336;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg);}
-    100% { transform: rotate(360deg);}
-  }
-  /* Campo telefone com prefixo fixo */
-  .telefone-container {
-    position: relative;
-    width: 100%;
-    margin-top: 10px;
-  }
-  .prefixo {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #ccc;
-    font-size: 1rem;
-    user-select: none;
-  }
-  #telefone {
-    padding-left: 55px; /* espaço para o prefixo */
-  }
-  /* Total calculado */
-  #totalCalculado {
-    font-size: 1.2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 5px;
-    color: #0f9d58;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro Rápido</title>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input {
+      background: #1e1e1e;
+      color: #fff;
+    }
+    button {
+      background-color: #0f9d58;
+      color: white;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.5em;
+      z-index: 9999;
+      user-select: none;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #overlay span {
+      margin-top: 1rem;
+      font-weight: 700;
+      font-size: 1.4rem;
+      line-height: 1.2;
+    }
+    .loading-icon {
+      font-size: 4rem;
+      color: #f0c420;
+      animation: spin 1.2s linear infinite;
+    }
+    .success-icon {
+      font-size: 4rem;
+      color: #0f9d58;
+    }
+    .error-icon {
+      font-size: 4rem;
+      color: #f44336;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    #totalCalculado {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 5px;
+      color: #0f9d58;
+    }
+  </style>
 </head>
 <body>
   <h2>Enviar Registro</h2>
   <input type="text" id="nome" placeholder="Nome" autocomplete="off" />
   <input type="number" id="total" placeholder="Quantidade" min="1" autocomplete="off" />
   <input type="number" step="0.01" id="preco" placeholder="Preço unitário (R$)" min="0" autocomplete="off" />
-  
   <div id="totalCalculado">Total: R$ 0,00</div>
-  
-  <label class="checkbox-label">
-    <input type="checkbox" id="enviarCliente" checked />
-    Enviar mensagem para o cliente
-  </label>
-
-  <div class="telefone-container" id="telefoneContainer">
-    <span class="prefixo">+55</span>
-    <input type="tel" id="telefone" placeholder="DDD + número (ex: 11999999999)" autocomplete="off" />
-  </div>
 
   <button id="botao" type="button" onclick="enviar()">Enviar</button>
 
@@ -143,162 +101,120 @@
     <div id="statusMessage"></div>
   </div>
 
-<script>
-  const overlay = document.getElementById("overlay");
-  const statusMessage = document.getElementById("statusMessage");
-  const botao = document.getElementById("botao");
-  const nomeInput = document.getElementById("nome");
-  const totalInput = document.getElementById("total");
-  const precoInput = document.getElementById("preco");
-  const telefoneInput = document.getElementById("telefone");
-  const totalCalculadoDisplay = document.getElementById("totalCalculado");
-  const enviarClienteCheckbox = document.getElementById("enviarCliente");
-  const telefoneContainer = document.getElementById("telefoneContainer");
+  <script>
+    const overlay = document.getElementById("overlay");
+    const statusMessage = document.getElementById("statusMessage");
+    const botao = document.getElementById("botao");
+    const nomeInput = document.getElementById("nome");
+    const totalInput = document.getElementById("total");
+    const precoInput = document.getElementById("preco");
+    const totalCalculadoDisplay = document.getElementById("totalCalculado");
 
-  const numeroDono = "5511973483242"; // número fixo do dono (com 55)
-  const apiKey = "2199442"; // api key
+    const numeroDono = "5511973483242";
+    const apiKey = "2199442";
 
-  function atualizarTotalCalculado() {
-    const qtd = parseInt(totalInput.value, 10);
-    const preco = parseFloat(precoInput.value.replace(",", "."));
-    if (!isNaN(qtd) && !isNaN(preco)) {
-      const total = qtd * preco;
-      totalCalculadoDisplay.textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
-    } else {
-      totalCalculadoDisplay.textContent = "Total: R$ 0,00";
-    }
-  }
-
-  totalInput.addEventListener("input", atualizarTotalCalculado);
-  precoInput.addEventListener("input", atualizarTotalCalculado);
-
-  // Mostrar ou esconder o campo telefone conforme checkbox
-  enviarClienteCheckbox.addEventListener("change", () => {
-    if (enviarClienteCheckbox.checked) {
-      telefoneContainer.style.display = "block";
-    } else {
-      telefoneContainer.style.display = "none";
-      telefoneInput.value = "";
-    }
-  });
-
-  // Inicializa visibilidade do telefone
-  if (!enviarClienteCheckbox.checked) {
-    telefoneContainer.style.display = "none";
-  }
-
-  function mostrarOverlay(mensagem, tipo) {
-    let iconHtml = "";
-    if (tipo === "loading") iconHtml = '<div class="loading-icon">⏳</div>';
-    else if (tipo === "success") iconHtml = '<div class="success-icon">✅</div>';
-    else if (tipo === "error") iconHtml = '<div class="error-icon">❌</div>';
-
-    statusMessage.innerHTML = iconHtml + '<span>' + mensagem + '</span>';
-    overlay.style.display = "flex";
-    overlay.setAttribute("aria-hidden", "false");
-  }
-
-  function esconderOverlay() {
-    overlay.style.display = "none";
-    statusMessage.innerHTML = "";
-    overlay.setAttribute("aria-hidden", "true");
-  }
-
-  function enviar() {
-    const nome = nomeInput.value.trim();
-    const total = totalInput.value.trim();
-    const precoStr = precoInput.value.trim().replace(",", ".");
-    const preco = parseFloat(precoStr);
-    let telefone = telefoneInput.value.trim();
-    const enviarCliente = enviarClienteCheckbox.checked;
-
-    if (!nome || !total || !precoStr) {
-      alert("Preencha todos os campos (exceto telefone se não enviar para cliente)!");
-      return;
-    }
-
-    if (isNaN(preco) || preco <= 0) {
-      alert("Preço inválido!");
-      return;
-    }
-
-    if (enviarCliente) {
-      if (!telefone) {
-        alert("Preencha o telefone para enviar mensagem ao cliente!");
-        return;
-      }
-      if (!/^\d{10,11}$/.test(telefone)) {
-        alert("Número inválido! Digite DDD + número (10 ou 11 dígitos). Ex: 11999999999");
-        return;
-      }
-      telefone = "55" + telefone;
-    }
-
-    mostrarOverlay("Enviando, aguarde...", "loading");
-    botao.disabled = true;
-    nomeInput.disabled = true;
-    totalInput.disabled = true;
-    precoInput.disabled = true;
-    telefoneInput.disabled = true;
-    enviarClienteCheckbox.disabled = true;
-
-    const data = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
-    const totalCalculado = (parseInt(total, 10) * preco).toFixed(2);
-
-    const mensagemDono = `*📬 NOVO REGISTRO*\n*👤 Nome:* ${nome}\n*📦 Quantidade:* ${total} unidades\n*💰 Preço unitário:* R$ ${preco.toFixed(2).replace(".", ",")}\n*📊 Total:* R$ ${totalCalculado.replace(".", ",")}\n*📅 Data:* ${data}\n${enviarCliente ? `*📞 Telefone:* +${telefone}` : ''}`;
-    const mensagemCliente = `*✅ Seu pedido foi registrado com sucesso!*\nObrigado, *${nome}*.\n*📦 Quantidade:* ${total} unidades\n*💰 Preço unitário:* R$ ${preco.toFixed(2).replace(".", ",")}\n*📊 Total:* R$ ${totalCalculado.replace(".", ",")}\n*📅 Data:* ${data.split(",")[0]}`;
-
-    fetch("https://script.google.com/macros/s/AKfycbyEQIo5z5cdRSP5tL1riLRTWv4rSM6nVvBF4SxZfhsek-kqANJQOLVbI12D-diY5X3B-A/exec", {
-      method: "POST",
-      body: new URLSearchParams({ nome, total, preco: preco.toFixed(2), totalCalculado })
-    })
-    .then(() => {
-      // enviar whatsapp para dono
-      fetch(`https://api.callmebot.com/whatsapp.php?phone=${numeroDono}&text=${encodeURIComponent(mensagemDono)}&apikey=${apiKey}`)
-      .then(() => console.log("Mensagem enviada ao dono"))
-      .catch(e => console.error("Erro envio dono:", e));
-
-      if (enviarCliente) {
-        // enviar whatsapp para cliente
-        fetch(`https://api.callmebot.com/whatsapp.php?phone=${telefone}&text=${encodeURIComponent(mensagemCliente)}&apikey=${apiKey}`)
-        .then(() => console.log("Mensagem enviada ao cliente"))
-        .catch(e => console.error("Erro envio cliente:", e));
-      }
-
-      mostrarOverlay("✅ Enviado com sucesso!", "success");
-
-      setTimeout(() => {
-        esconderOverlay();
-        botao.disabled = false;
-        nomeInput.disabled = false;
-        totalInput.disabled = false;
-        precoInput.disabled = false;
-        telefoneInput.disabled = false;
-        enviarClienteCheckbox.disabled = false;
-        nomeInput.value = "";
-        totalInput.value = "";
-        precoInput.value = "";
-        telefoneInput.value = "";
-        enviarClienteCheckbox.checked = true;
-        telefoneContainer.style.display = "block";
+    function atualizarTotalCalculado() {
+      const qtd = parseInt(totalInput.value, 10);
+      const preco = parseFloat(precoInput.value.replace(",", "."));
+      if (!isNaN(qtd) && !isNaN(preco)) {
+        const total = qtd * preco;
+        totalCalculadoDisplay.textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
+      } else {
         totalCalculadoDisplay.textContent = "Total: R$ 0,00";
-        nomeInput.focus();
-      }, 3000);
-    })
-    .catch((err) => {
-      console.error("Erro ao enviar para planilha:", err);
-      mostrarOverlay("Erro ao enviar. Tente novamente.", "error");
-      setTimeout(() => {
-        esconderOverlay();
-        botao.disabled = false;
-        nomeInput.disabled = false;
-        totalInput.disabled = false;
-        precoInput.disabled = false;
-        telefoneInput.disabled = false;
-        enviarClienteCheckbox.disabled = false;
-      }, 3000);
-    });
-  }
-</script>
+      }
+    }
+
+    totalInput.addEventListener("input", atualizarTotalCalculado);
+    precoInput.addEventListener("input", atualizarTotalCalculado);
+
+    function mostrarOverlay(mensagem, tipo) {
+      let iconHtml = "";
+      if (tipo === "loading") iconHtml = '<div class="loading-icon">⏳</div>';
+      else if (tipo === "success") iconHtml = '<div class="success-icon">✅</div>';
+      else if (tipo === "error") iconHtml = '<div class="error-icon">❌</div>';
+
+      statusMessage.innerHTML = iconHtml + '<span>' + mensagem + '</span>';
+      overlay.style.display = "flex";
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function esconderOverlay() {
+      overlay.style.display = "none";
+      statusMessage.innerHTML = "";
+      overlay.setAttribute("aria-hidden", "true");
+    }
+
+    function enviar() {
+      const nome = nomeInput.value.trim();
+      const total = totalInput.value.trim();
+      const precoStr = precoInput.value.trim().replace(",", ".");
+      const preco = parseFloat(precoStr);
+
+      if (!nome || !total || !precoStr) {
+        alert("Preencha todos os campos!");
+        return;
+      }
+
+      if (isNaN(preco) || preco <= 0) {
+        alert("Preço inválido!");
+        return;
+      }
+
+      const data = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      const totalCalculado = (parseInt(total, 10) * preco).toFixed(2);
+
+      mostrarOverlay("Enviando, aguarde...", "loading");
+      botao.disabled = true;
+      nomeInput.disabled = true;
+      totalInput.disabled = true;
+      precoInput.disabled = true;
+
+      const mensagemDono = `*📬 NOVO REGISTRO*\n*👤 Nome:* ${nome}\n*📦 Quantidade:* ${total} unidades\n*💰 Preço unitário:* R$ ${preco.toFixed(2).replace(".", ",")}\n*📊 Total:* R$ ${totalCalculado.replace(".", ",")}\n*📅 Data:* ${data}`;
+
+      // Envia para planilha
+      fetch("https://script.google.com/macros/s/AKfycbyEQIo5z5cdRSP5tL1riLRTWv4rSM6nVvBF4SxZfhsek-kqANJQOLVbI12D-diY5X3B-A/exec", {
+        method: "POST",
+        body: new URLSearchParams({
+          nome,
+          total,
+          preco: preco.toFixed(2),
+          totalCalculado,
+          data
+        })
+      })
+      .then(() => {
+        // Envia WhatsApp para o dono
+        fetch(`https://api.callmebot.com/whatsapp.php?phone=${numeroDono}&text=${encodeURIComponent(mensagemDono)}&apikey=${apiKey}`)
+        .then(() => console.log("Mensagem enviada ao dono"))
+        .catch(e => console.error("Erro envio dono:", e));
+
+        mostrarOverlay("✅ Enviado com sucesso!", "success");
+
+        setTimeout(() => {
+          esconderOverlay();
+          botao.disabled = false;
+          nomeInput.disabled = false;
+          totalInput.disabled = false;
+          precoInput.disabled = false;
+          nomeInput.value = "";
+          totalInput.value = "";
+          precoInput.value = "";
+          totalCalculadoDisplay.textContent = "Total: R$ 0,00";
+          nomeInput.focus();
+        }, 3000);
+      })
+      .catch((err) => {
+        console.error("Erro ao enviar para planilha:", err);
+        mostrarOverlay("Erro ao enviar. Tente novamente.", "error");
+        setTimeout(() => {
+          esconderOverlay();
+          botao.disabled = false;
+          nomeInput.disabled = false;
+          totalInput.disabled = false;
+          precoInput.disabled = false;
+        }, 3000);
+      });
+    }
+  </script>
 </body>
 </html>
